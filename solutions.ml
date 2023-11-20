@@ -20,3 +20,14 @@ let rec last_two (xs: 'a list): ('a * 'a) option =
 
 assert(last_two ["a"; "b"; "c"; "d"] = Some ("c", "d"));;
 assert(last_two ["a"] = None);;
+
+(* Problem 03. Find the K'th element of a list. (easy) *)
+
+let rec at (k: int) (xs: 'a list): 'a option =
+  match xs with
+  | [] -> None
+  | x :: rest -> if k = 1 then Some x else at (k-1) rest 
+;;
+
+assert(at 3 ["a"; "b"; "c"; "d"; "e"] = Some "c");;
+assert(at 3 ["a"] = None);;
