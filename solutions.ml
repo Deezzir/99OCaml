@@ -6,11 +6,7 @@ let rec last (xs : 'a list): 'a option =
   | _ :: rest -> last rest
 ;;
 
-assert(last ["a" ; "b" ; "c" ; "d"] = Some "d");;
-assert(last [] = None);;
-
 (* Problem 02. Find the last but one (last and penultimate) elements of a list. (easy) *)
-
 let rec last_two (xs: 'a list): ('a * 'a) option = 
   match xs with
   | [] | [_] -> None
@@ -18,16 +14,43 @@ let rec last_two (xs: 'a list): ('a * 'a) option =
   | _ :: rest -> last_two rest
 ;;
 
-assert(last_two ["a"; "b"; "c"; "d"] = Some ("c", "d"));;
-assert(last_two ["a"] = None);;
-
 (* Problem 03. Find the K'th element of a list. (easy) *)
-
 let rec at (k: int) (xs: 'a list): 'a option =
   match xs with
   | [] -> None
   | x :: rest -> if k = 1 then Some x else at (k-1) rest 
 ;;
 
-assert(at 3 ["a"; "b"; "c"; "d"; "e"] = Some "c");;
-assert(at 3 ["a"] = None);;
+(* Problem 04. Find the number of elements of a list. (easy) *)
+let rec length_naive (xs: 'a list): int =
+  match xs with
+  | [] -> 0
+  | [_] -> 1
+  | _ :: rest -> length_naive rest + 1
+;;
+
+let length (xs: 'a list): int =
+  let rec _length (acc: int) (xs: 'a list) =
+    match xs with
+    | [] -> acc
+    | _ :: rest -> _length (acc+1) rest
+  in _length 0 xs
+;;
+
+let () = 
+  print_endline "Checking solution for Problem 01";
+  assert(last ["a" ; "b" ; "c" ; "d"] = Some "d");
+  assert(last [] = None);
+
+  print_endline "Checking solution for Problem 02";
+  assert(last_two ["a"; "b"; "c"; "d"] = Some ("c", "d"));
+  assert(last_two ["a"] = None);
+
+  print_endline "Checking solution for Problem 03";
+  assert(at 3 ["a"; "b"; "c"; "d"; "e"] = Some "c");
+  assert(at 3 ["a"] = None);
+
+  print_endline "Checking solution for Problem 04";
+  assert(length ["a"; "b"; "c"] = 3);
+  assert(length [] = 0);
+;;
