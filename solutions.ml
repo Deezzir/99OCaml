@@ -25,7 +25,6 @@ let rec at (k: int) (xs: 'a list): 'a option =
 let rec length_naive (xs: 'a list): int =
   match xs with
   | [] -> 0
-  | [_] -> 1
   | _ :: rest -> length_naive rest + 1
 ;;
 
@@ -35,6 +34,14 @@ let length (xs: 'a list): int =
     | [] -> acc
     | _ :: rest -> _length (acc+1) rest
   in _length 0 xs
+;;
+
+(* Problem 05. Reverse a list. (easy) *)
+let rev (xs: 'a list): 'a list =
+  let rec _rev acc = function
+    | [] -> acc
+    | h :: t -> _rev (h :: acc) t in
+  _rev [] xs
 ;;
 
 let () = 
@@ -53,4 +60,7 @@ let () =
   print_endline "Checking solution for Problem 04";
   assert(length ["a"; "b"; "c"] = 3);
   assert(length [] = 0);
+
+  print_endline "Checking solution for Problem 05";
+  assert(rev ["a"; "b"; "c"] = ["c"; "b"; "a"]);
 ;;
