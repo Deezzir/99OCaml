@@ -44,6 +44,14 @@ let rev (xs: 'a list): 'a list =
   _rev [] xs
 ;;
 
+(* Problem 06. Find out whether a list is a palindrome. (easy) *)
+let is_palindrome (xs: 'a list): bool = 
+  let rec _rev acc = function
+    | [] -> acc
+    | h :: t -> _rev (h :: acc) t in
+  _rev [] xs = xs
+;;
+
 let () = 
   print_endline "Checking solution for Problem 01";
   assert(last ["a" ; "b" ; "c" ; "d"] = Some "d");
@@ -63,4 +71,8 @@ let () =
 
   print_endline "Checking solution for Problem 05";
   assert(rev ["a"; "b"; "c"] = ["c"; "b"; "a"]);
+
+  print_endline "Checking solution for Problem 06";
+  assert(is_palindrome ["x"; "a"; "m"; "a"; "x"] = true);
+  assert(not (is_palindrome ["a"; "b"]) = true);
 ;;
