@@ -75,6 +75,16 @@ let rec compress (xs : 'a list) : 'a list =
   | x :: (y :: _ as rest) -> if x = y then compress rest else x :: compress rest
   | rest -> rest
 
+(* Problem 10. Run-length encoding of a list. (easy) *)
+let encode (xs : 'a list) : (int * 'a) list =
+  let rec _encode acc = function
+    | x :: (y :: _ as rest) ->
+        if x = y then _encode (acc + 1) rest else (acc + 1, x) :: _encode 0 rest
+    | [ x ] -> [ (acc + 1, x) ]
+    | [] -> []
+  in
+  _encode 0 xs
+
 let () =
   print_endline "Checking solution for Problem 01";
   assert (last [ "a"; "b"; "c"; "d" ] = Some "d");
@@ -108,4 +118,10 @@ let () =
   assert (
     compress
       [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]
-    = [ "a"; "b"; "c"; "a"; "d"; "e" ])
+    = [ "a"; "b"; "c"; "a"; "d"; "e" ]);
+
+  print_endline "Checking solution for Problem 09";
+  assert (
+    encode
+      [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]
+    = [ (4, "a"); (1, "b"); (2, "c"); (2, "a"); (1, "d"); (4, "e") ])
