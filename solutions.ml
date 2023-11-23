@@ -29,14 +29,19 @@ let rec length_naive (xs: 'a list): int =
 ;;
 
 let length (xs: 'a list): int =
-  let rec _length (acc: int) (xs: 'a list) =
-    match xs with
+  let rec _length acc = function
     | [] -> acc
     | _ :: rest -> _length (acc+1) rest
   in _length 0 xs
 ;;
 
 (* Problem 05. Reverse a list. (easy) *)
+let rec rev_naive (xs: 'a list): 'a list = 
+  match xs with
+  | [] -> []
+  | x :: rest -> rev_naive rest @ [x]
+;;
+
 let rev (xs: 'a list): 'a list =
   let rec _rev acc = function
     | [] -> acc
@@ -50,6 +55,29 @@ let is_palindrome (xs: 'a list): bool =
     | [] -> acc
     | h :: t -> _rev (h :: acc) t in
   _rev [] xs = xs
+;;
+
+(* Problem 07. Flatten a nested list structure. (medium) *)
+type 'a node =
+  | One of 'a 
+  | Many of 'a node list
+;;
+
+let flatten_naive (xs: 'a node list): 'a list = 
+  let rec _flatten acc = function
+  | [] -> acc
+  | [One x] -> x :: acc
+  | [Many x] -> _flatten acc x
+  | x :: rest -> _flatten (_flatten acc [x]) rest in
+  List.rev (_flatten [] xs)
+;;
+
+let flatten (xs: 'a node list): 'a list = 
+  let rec _flatten acc = function
+  | [] -> acc
+  | One x :: rest -> _flatten (x :: acc) rest
+  | Many x :: rest -> _flatten (_flatten acc x) rest in
+  List.rev (_flatten [] xs)
 ;;
 
 let () = 
@@ -75,4 +103,7 @@ let () =
   print_endline "Checking solution for Problem 06";
   assert(is_palindrome ["x"; "a"; "m"; "a"; "x"] = true);
   assert(not (is_palindrome ["a"; "b"]) = true);
+
+  print_endline "Checking solution for Problem 07";
+  assert(flatten [One "a"; Many [One "b"; Many [One "c"; One "d"]; One "e"]] = ["a"; "b"; "c"; "d"; "e"]);;
 ;;
