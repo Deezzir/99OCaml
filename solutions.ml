@@ -75,6 +75,17 @@ let rec compress (xs : 'a list) : 'a list =
   | x :: (y :: _ as rest) -> if x = y then compress rest else x :: compress rest
   | rest -> rest
 
+(* Problem 09. Pack consecutive duplicates of list elements into sublists. (medium) *)
+let pack (xs : 'a list) : 'a list list =
+  let rec _pack inner acc = function
+    | [] -> acc
+    | x :: (y :: _ as rest) ->
+        let inner = x :: inner in
+        if x = y then _pack inner acc rest else _pack [] (inner :: acc) rest
+    | [ x ] -> (x :: inner) :: acc
+  in
+  List.rev (_pack [] [] xs)
+
 (* Problem 10. Run-length encoding of a list. (easy) *)
 let encode (xs : 'a list) : (int * 'a) list =
   let rec _encode acc = function
@@ -121,6 +132,18 @@ let () =
     = [ "a"; "b"; "c"; "a"; "d"; "e" ]);
 
   print_endline "Checking solution for Problem 09";
+  assert (
+    pack [ "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "d"; "e"; "e"; "e" ]
+    = [
+        [ "a"; "a"; "a" ];
+        [ "b" ];
+        [ "c"; "c" ];
+        [ "a"; "a" ];
+        [ "d"; "d" ];
+        [ "e"; "e"; "e" ];
+      ]);
+
+  print_endline "Checking solution for Problem 10";
   assert (
     encode
       [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]
