@@ -131,7 +131,20 @@ let decode_rle (xs : 'a rle list) : 'a list =
   List.rev (_decode_rle [] xs)
 
 (* Problem 13. Run-length encoding of a list (direct solution). (medium) *)
-let encode_dir (xs : 'a list) : 'a rle list = []
+let encode_dir (xs : 'a list) : 'a rle list =
+  let _make cnt x = if cnt = 0 then One x else Many (cnt + 1, x) in
+  let rec _encode_dir cnt acc = function
+    | [] -> []
+    | [ x ] -> _make cnt x :: acc
+    | x :: (y :: _ as rest) ->
+        if x = y then _encode_dir (cnt + 1) acc rest
+        else _encode_dir 0 (_make cnt x :: acc) rest
+  in
+  List.rev (_encode_dir 0 [] xs)
+
+(* Problem 14. Duplicate the elements of a list. (easy) *)
+let rec duplicate (xs : 'a list) : 'a list =
+  match xs with [] -> [] | x :: rest -> x :: x :: duplicate rest
 
 (* Main *)
 let () =
@@ -213,6 +226,19 @@ let () =
       ]
     = [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]);
 
+  print_endline "Checking solution for Problem 13";
+
+  assert (
+    encode_dir
+      [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]
+    = [
+        Many (4, "a");
+        One "b";
+        Many (2, "c");
+        Many (2, "a");
+        One "d";
+        Many (4, "e");
+      ]);
   print_endline "Checking solution for Problem 14";
   assert (
     duplicate [ "a"; "b"; "c"; "c"; "d" ]
