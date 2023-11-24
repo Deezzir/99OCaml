@@ -96,6 +96,28 @@ let encode (xs : 'a list) : (int * 'a) list =
   in
   _encode 0 xs
 
+(* Problem 11. Modified run-length encoding. (easy) *)
+type 'a rle = One of 'a | Many of int * 'a
+
+let encode_rle' xs =
+  List.map
+    (fun l ->
+      let len = List.length l in
+      let v = List.hd l in
+      match len with 1 -> One v | l -> Many (l, v))
+    (pack xs)
+
+let encode_rle (xs : 'a list) : 'a rle list =
+  let _make cnt x = if cnt = 1 then One x else Many (cnt, x) in
+  let rec _encode_rle cnt acc = function
+    | [] -> []
+    | [ x ] -> _make (cnt + 1) x :: acc
+    | x :: (y :: _ as rest) ->
+        if x = y then _encode_rle (cnt + 1) acc rest
+        else _encode_rle 0 (_make (cnt + 1) x :: acc) rest
+  in
+  List.rev (_encode_rle 0 [] xs)
+
 let () =
   print_endline "Checking solution for Problem 01";
   assert (last [ "a"; "b"; "c"; "d" ] = Some "d");
@@ -147,4 +169,17 @@ let () =
   assert (
     encode
       [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]
-    = [ (4, "a"); (1, "b"); (2, "c"); (2, "a"); (1, "d"); (4, "e") ])
+    = [ (4, "a"); (1, "b"); (2, "c"); (2, "a"); (1, "d"); (4, "e") ]);
+
+  print_endline "Checking solution for Problem 11";
+  assert (
+    encode_rle
+      [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]
+    = [
+        Many (4, "a");
+        One "b";
+        Many (2, "c");
+        Many (2, "a");
+        One "d";
+        Many (4, "e");
+      ])
