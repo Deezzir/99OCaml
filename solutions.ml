@@ -120,6 +120,15 @@ let encode_rle (xs : 'a list) : 'a rle list =
   in
   List.rev (_encode_rle 0 [] xs)
 
+(* Problem 12. Decode a run-length encoded list. (medium) *)
+let decode_rle (xs : 'a rle list) : 'a list =
+  let rec _decode_rle acc = function
+    | [] -> acc
+    | Many (l, x) :: rest when l != 1 ->
+        _decode_rle (x :: acc) (Many (l - 1, x) :: rest)
+    | (One x | Many (_, x)) :: rest -> _decode_rle (x :: acc) rest
+  in
+  List.rev (_decode_rle [] xs)
 let () =
   print_endline "Checking solution for Problem 01";
   assert (last [ "a"; "b"; "c"; "d" ] = Some "d");
@@ -184,4 +193,17 @@ let () =
         Many (2, "a");
         One "d";
         Many (4, "e");
-      ])
+      ]);
+
+  print_endline "Checking solution for Problem 12";
+  assert (
+    decode_rle
+      [
+        Many (4, "a");
+        One "b";
+        Many (2, "c");
+        Many (2, "a");
+        One "d";
+        Many (4, "e");
+      ]
+    = [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]);
