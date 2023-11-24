@@ -16,8 +16,8 @@ let rec at (k : int) (xs : 'a list) : 'a option =
   | x :: rest -> if k = 1 then Some x else at (k - 1) rest
 
 (* Problem 04. Find the number of elements of a list. (easy) *)
-let rec length_naive (xs : 'a list) : int =
-  match xs with [] -> 0 | _ :: rest -> length_naive rest + 1
+let rec length' (xs : 'a list) : int =
+  match xs with [] -> 0 | _ :: rest -> length' rest + 1
 
 let length (xs : 'a list) : int =
   let rec _length acc = function
@@ -27,8 +27,8 @@ let length (xs : 'a list) : int =
   _length 0 xs
 
 (* Problem 05. Reverse a list. (easy) *)
-let rec rev_naive (xs : 'a list) : 'a list =
-  match xs with [] -> [] | x :: rest -> rev_naive rest @ [ x ]
+let rec rev' (xs : 'a list) : 'a list =
+  match xs with [] -> [] | x :: rest -> rev' rest @ [ x ]
 
 let rev (xs : 'a list) : 'a list =
   let rec _rev acc = function [] -> acc | h :: t -> _rev (h :: acc) t in
@@ -42,7 +42,7 @@ let is_palindrome (xs : 'a list) : bool =
 (* Problem 07. Flatten a nested list structure. (medium) *)
 type 'a node = One of 'a | Many of 'a node list
 
-let flatten_naive (xs : 'a node list) : 'a list =
+let flatten' (xs : 'a node list) : 'a list =
   let rec _flatten acc = function
     | [] -> acc
     | [ One x ] -> x :: acc
@@ -60,7 +60,7 @@ let flatten (xs : 'a node list) : 'a list =
   List.rev (_flatten [] xs)
 
 (* Problem 08. Eliminate consecutive duplicates of list elements. (medium) *)
-let compress_naive (xs : 'a list) : 'a list =
+let compress' (xs : 'a list) : 'a list =
   let rec _compress acc = function
     | [] -> acc
     | x :: rest ->
@@ -87,12 +87,14 @@ let pack (xs : 'a list) : 'a list list =
   List.rev (_pack [] [] xs)
 
 (* Problem 10. Run-length encoding of a list. (easy) *)
+let encode' xs = List.map (fun l -> (List.length l, List.hd l)) (pack xs)
+
 let encode (xs : 'a list) : (int * 'a) list =
   let rec _encode acc = function
+    | [] -> []
+    | [ x ] -> [ (acc + 1, x) ]
     | x :: (y :: _ as rest) ->
         if x = y then _encode (acc + 1) rest else (acc + 1, x) :: _encode 0 rest
-    | [ x ] -> [ (acc + 1, x) ]
-    | [] -> []
   in
   _encode 0 xs
 
