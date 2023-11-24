@@ -129,6 +129,11 @@ let decode_rle (xs : 'a rle list) : 'a list =
     | (One x | Many (_, x)) :: rest -> _decode_rle (x :: acc) rest
   in
   List.rev (_decode_rle [] xs)
+
+(* Problem 13. Run-length encoding of a list (direct solution). (medium) *)
+let encode_dir (xs : 'a list) : 'a rle list = []
+
+(* Main *)
 let () =
   print_endline "Checking solution for Problem 01";
   assert (last [ "a"; "b"; "c"; "d" ] = Some "d");
@@ -207,3 +212,8 @@ let () =
         Many (4, "e");
       ]
     = [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]);
+
+  print_endline "Checking solution for Problem 14";
+  assert (
+    duplicate [ "a"; "b"; "c"; "c"; "d" ]
+    = [ "a"; "a"; "b"; "b"; "c"; "c"; "c"; "c"; "d"; "d" ])
