@@ -146,6 +146,22 @@ let encode_dir (xs : 'a list) : 'a rle list =
 let rec duplicate (xs : 'a list) : 'a list =
   match xs with [] -> [] | x :: rest -> x :: x :: duplicate rest
 
+(* Problem 15. Replicate the elements of a list a given number of times. (medium) *)
+let replicate' list n =
+  let rec _prepend n acc x =
+    if n = 0 then acc else _prepend (n - 1) (x :: acc) x
+  in
+  List.fold_left (_prepend n) [] (List.rev list)
+
+let replicate (xs : 'a list) (n : int) : 'a list =
+  let rec _replicate cnt acc = function
+    | [] -> acc
+    | x :: rest ->
+        if cnt > 0 then _replicate (cnt - 1) (x :: acc) (x :: rest)
+        else _replicate n acc rest
+  in
+  List.rev (_replicate n [] xs)
+
 (* Main *)
 let () =
   print_endline "Checking solution for Problem 01";
@@ -227,7 +243,6 @@ let () =
     = [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]);
 
   print_endline "Checking solution for Problem 13";
-
   assert (
     encode_dir
       [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]
@@ -239,7 +254,13 @@ let () =
         One "d";
         Many (4, "e");
       ]);
+
   print_endline "Checking solution for Problem 14";
   assert (
     duplicate [ "a"; "b"; "c"; "c"; "d" ]
-    = [ "a"; "a"; "b"; "b"; "c"; "c"; "c"; "c"; "d"; "d" ])
+    = [ "a"; "a"; "b"; "b"; "c"; "c"; "c"; "c"; "d"; "d" ]);
+
+  print_endline "Checking solution for Problem 15";
+  assert (
+    replicate [ "a"; "b"; "c" ] 3
+    = [ "a"; "a"; "a"; "b"; "b"; "b"; "c"; "c"; "c" ])
