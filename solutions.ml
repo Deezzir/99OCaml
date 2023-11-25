@@ -195,17 +195,39 @@ let split (xs : 'a list) (n : int) : 'a list * 'a list =
   _split 0 [] xs
 
 (* Problem 18. Extract a slice from a list. (medium) *)
+let slice' list i k =
+  let rec fold_until f acc n = function
+    | [] -> (acc, [])
+    | h :: t as l ->
+        if n = 0 then (acc, l) else fold_until f (f acc h) (n - 1) t
+  in
+  let _, list = fold_until (fun _ _ -> []) [] i list in
+  let taken, _ = fold_until (fun acc h -> h :: acc) [] (k - i + 1) list in
+  List.rev taken
+
 let slice (xs : 'a list) (s : int) (e : int) : 'a list =
   let rec _slice cnt acc = function
-    | [] -> acc
+    | [] -> List.rev acc
     | x :: rest ->
-        if cnt >= s && cnt <= e then _slice (cnt + 1) (x :: acc) rest
+        if cnt > e then List.rev acc
+        else if cnt >= s then _slice (cnt + 1) (x :: acc) rest
         else _slice (cnt + 1) acc rest
   in
-  List.rev (_slice 0 [] xs)
+  _slice 0 [] xs
 
 (* Problem 19. Rotate a list N places to the left. (medium) *)
-let rotate (_ : 'a list) (_ : int) : 'a list = failwith "TODO"
+let rotate (xs : 'a list) (r : int) : 'a list =
+  let len = List.length xs in
+  let n = if len = 0 then 0 else ((r mod len) + len) mod len in
+  if n = 0 then xs
+  else
+    let rec _rotate cnt acc = function
+      | [] -> List.rev acc
+      | x :: rest ->
+          if cnt = n then x :: _rotate cnt acc rest
+          else _rotate (cnt + 1) (x :: acc) rest
+    in
+    _rotate 0 [] xs
 
 (* Problem 20. Remove the K'th element from a list. (easy) *)
 let remove_at (_ : int) (_ : 'a list) : 'a list * 'a option = failwith "TODO"

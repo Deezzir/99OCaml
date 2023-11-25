@@ -2,9 +2,9 @@ open OUnit2
 open Solutions
 
 let make_test name problem test_func =
-  name >:: fun _ ->
+  name >:: (fun _ ->
   print_endline (name ^ ": solution for Problem " ^ problem);
-  test_func ()
+  test_func ())
 
 let test_last =
   make_test "test_last" "01" (fun _ ->
@@ -203,6 +203,15 @@ let test_slice =
         (slice [ "a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"; "i"; "j" ] 2 6)
         [ "c"; "d"; "e"; "f"; "g" ])
 
+let test_rotate =
+  make_test "test_rotate" "19" (fun _ ->
+      assert_equal
+        (rotate [ "a"; "b"; "c"; "d"; "e"; "f"; "g"; "h" ] 3)
+        [ "d"; "e"; "f"; "g"; "h"; "a"; "b"; "c" ];
+      assert_equal
+        (rotate [ "a"; "b"; "c"; "d"; "e"; "f"; "g"; "h" ] (-2))
+        [ "g"; "h"; "a"; "b"; "c"; "d"; "e"; "f" ])
+
 let suite =
   "suite"
   >::: [
@@ -224,6 +233,7 @@ let suite =
          test_drop;
          test_split;
          test_slice;
+         test_rotate;
        ]
 
 let () = run_test_tt_main suite
