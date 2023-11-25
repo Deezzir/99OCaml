@@ -230,7 +230,10 @@ let rotate (xs : 'a list) (r : int) : 'a list =
     _rotate 0 [] xs
 
 (* Problem 20. Remove the K'th element from a list. (easy) *)
-let remove_at (_ : int) (_ : 'a list) : 'a list * 'a option = failwith "TODO"
+let rec remove_at (at : int) (xs : 'a list) : 'a list =
+  match xs with
+  | [] -> []
+  | x :: rest -> if at = 0 then rest else x :: remove_at (at - 1) rest
 
 (* Problem 21. Insert an element at a given position into a list. (easy) *)
 let insert_at (_ : 'a) (_ : int) (_ : 'a list) : 'a list = failwith "TODO"
