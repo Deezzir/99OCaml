@@ -190,120 +190,37 @@ let split (xs : 'a list) (n : int) : 'a list * 'a list =
   let rec _split cnt acc = function
     | [] -> (List.rev acc, [])
     | x :: rest as l ->
-        if cnt = n then (List.rev acc, rest) else _split (cnt + 1) (x :: acc) l
+        if cnt = n then (List.rev acc, l) else _split (cnt + 1) (x :: acc) rest
   in
   _split 0 [] xs
 
-(* Main *)
-let () =
-  print_endline "Checking solution for Problem 01";
-  assert (last [ "a"; "b"; "c"; "d" ] = Some "d");
-  assert (last [] = None);
+(* Problem 18. Extract a slice from a list. (medium) *)
+let slice (xs : 'a list) (s : int) (e : int) : 'a list =
+  let rec _slice cnt acc = function
+    | [] -> acc
+    | x :: rest ->
+        if cnt >= s && cnt <= e then _slice (cnt + 1) (x :: acc) rest
+        else _slice (cnt + 1) acc rest
+  in
+  List.rev (_slice 0 [] xs)
 
-  print_endline "Checking solution for Problem 02";
-  assert (last_two [ "a"; "b"; "c"; "d" ] = Some ("c", "d"));
-  assert (last_two [ "a" ] = None);
+(* Problem 19. Rotate a list N places to the left. (medium) *)
+let rotate (_ : 'a list) (_ : int) : 'a list = failwith "TODO"
 
-  print_endline "Checking solution for Problem 03";
-  assert (at 3 [ "a"; "b"; "c"; "d"; "e" ] = Some "c");
-  assert (at 3 [ "a" ] = None);
+(* Problem 20. Remove the K'th element from a list. (easy) *)
+let remove_at (_ : int) (_ : 'a list) : 'a list * 'a option = failwith "TODO"
 
-  print_endline "Checking solution for Problem 04";
-  assert (length [ "a"; "b"; "c" ] = 3);
-  assert (length [] = 0);
+(* Problem 21. Insert an element at a given position into a list. (easy) *)
+let insert_at (_ : 'a) (_ : int) (_ : 'a list) : 'a list = failwith "TODO"
 
-  print_endline "Checking solution for Problem 05";
-  assert (rev [ "a"; "b"; "c" ] = [ "c"; "b"; "a" ]);
+(* Problem 22. Create a list containing all integers within a given range. (easy) *)
+let range (_ : int) (_ : int) : int list = failwith "TODO"
 
-  print_endline "Checking solution for Problem 06";
-  assert (is_palindrome [ "x"; "a"; "m"; "a"; "x" ] = true);
-  assert ((not (is_palindrome [ "a"; "b" ])) = true);
+(* Problem 23. Extract a given number of randomly selected elements from a list. (medium) *)
+let rand_select (_ : 'a list) (_ : int) : 'a list = failwith "TODO"
 
-  print_endline "Checking solution for Problem 07";
-  assert (
-    flatten [ One "a"; Many [ One "b"; Many [ One "c"; One "d" ]; One "e" ] ]
-    = [ "a"; "b"; "c"; "d"; "e" ]);
+(* Problem 24. Lotto: Draw N different random numbers from the set 1..M. (easy) *)
+let lotto_select (_ : int) (_ : int) : int list = failwith "TODO"
 
-  print_endline "Checking solution for Problem 08";
-  assert (
-    compress
-      [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]
-    = [ "a"; "b"; "c"; "a"; "d"; "e" ]);
-
-  print_endline "Checking solution for Problem 09";
-  assert (
-    pack [ "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "d"; "e"; "e"; "e" ]
-    = [
-        [ "a"; "a"; "a" ];
-        [ "b" ];
-        [ "c"; "c" ];
-        [ "a"; "a" ];
-        [ "d"; "d" ];
-        [ "e"; "e"; "e" ];
-      ]);
-
-  print_endline "Checking solution for Problem 10";
-  assert (
-    encode
-      [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]
-    = [ (4, "a"); (1, "b"); (2, "c"); (2, "a"); (1, "d"); (4, "e") ]);
-
-  print_endline "Checking solution for Problem 11";
-  assert (
-    encode_rle
-      [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]
-    = [
-        Many (4, "a");
-        One "b";
-        Many (2, "c");
-        Many (2, "a");
-        One "d";
-        Many (4, "e");
-      ]);
-
-  print_endline "Checking solution for Problem 12";
-  assert (
-    decode_rle
-      [
-        Many (4, "a");
-        One "b";
-        Many (2, "c");
-        Many (2, "a");
-        One "d";
-        Many (4, "e");
-      ]
-    = [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]);
-
-  print_endline "Checking solution for Problem 13";
-  assert (
-    encode_dir
-      [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e" ]
-    = [
-        Many (4, "a");
-        One "b";
-        Many (2, "c");
-        Many (2, "a");
-        One "d";
-        Many (4, "e");
-      ]);
-
-  print_endline "Checking solution for Problem 14";
-  assert (
-    duplicate [ "a"; "b"; "c"; "c"; "d" ]
-    = [ "a"; "a"; "b"; "b"; "c"; "c"; "c"; "c"; "d"; "d" ]);
-
-  print_endline "Checking solution for Problem 15";
-  assert (
-    replicate [ "a"; "b"; "c" ] 3
-    = [ "a"; "a"; "a"; "b"; "b"; "b"; "c"; "c"; "c" ]);
-
-  print_endline "Checking solution for Problem 16";
-  assert (
-    drop [ "a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"; "i"; "j" ] 3
-    = [ "a"; "b"; "d"; "e"; "g"; "h"; "j" ]);
-
-  print_endline "Checking solution for Problem 17";
-  assert (
-    split [ "a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"; "i"; "j" ] 3
-    = ([ "a"; "b"; "c" ], [ "d"; "e"; "f"; "g"; "h"; "i"; "j" ]));
-  assert (split [ "a"; "b"; "c"; "d" ] 5 = ([ "a"; "b"; "c"; "d" ], []))
+(* Problem 25. Generate a random permutation of the elements of a list. (easy) *)
+let permutation (_ : 'a list) : 'a list = failwith "TODO"
