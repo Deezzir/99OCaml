@@ -236,7 +236,10 @@ let rec remove_at (at : int) (xs : 'a list) : 'a list =
   | x :: rest -> if at = 0 then rest else x :: remove_at (at - 1) rest
 
 (* Problem 21. Insert an element at a given position into a list. (easy) *)
-let insert_at (_ : 'a) (_ : int) (_ : 'a list) : 'a list = failwith "TODO"
+let rec insert_at (v : 'a) (at : int) (xs : 'a list) : 'a list =
+  match xs with
+  | [] -> [v]
+  | x :: rest as l -> if at = 0 then v :: l else x :: insert_at v (at - 1) rest
 
 (* Problem 22. Create a list containing all integers within a given range. (easy) *)
 let range (_ : int) (_ : int) : int list = failwith "TODO"

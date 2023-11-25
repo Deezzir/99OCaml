@@ -216,6 +216,18 @@ let test_remove_at =
   make_test "test_remove_at" "20" (fun _ ->
       assert_equal (remove_at 1 [ "a"; "b"; "c"; "d" ]) [ "a"; "c"; "d" ])
 
+let test_insert_at =
+  make_test "test_insert_at" "21" (fun _ ->
+      assert_equal
+        (insert_at "alfa" 1 [ "a"; "b"; "c"; "d" ])
+        [ "a"; "alfa"; "b"; "c"; "d" ];
+      assert_equal
+        (insert_at "alfa" 3 [ "a"; "b"; "c"; "d" ])
+        [ "a"; "b"; "c"; "alfa"; "d" ];
+      assert_equal
+        (insert_at "alfa" 4 [ "a"; "b"; "c"; "d" ])
+        [ "a"; "b"; "c"; "d"; "alfa" ])
+
 let suite =
   "suite"
   >::: [
@@ -239,6 +251,7 @@ let suite =
          test_slice;
          test_rotate;
          test_remove_at;
+         test_insert_at;
        ]
 
 let () = run_test_tt_main suite
