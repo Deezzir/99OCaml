@@ -166,10 +166,33 @@ let replicate (xs : 'a list) (n : int) : 'a list =
 let drop (xs : 'a list) (n : int) : 'a list =
   let rec _drop cnt = function
     | [] -> []
-    | x :: rest ->
-        if cnt = n then _drop 1 rest else x :: _drop (cnt + 1) rest
+    | x :: rest -> if cnt = n then _drop 1 rest else x :: _drop (cnt + 1) rest
   in
   _drop 1 xs
+
+(* Problem 17. Split a list into two parts; the length of the first part is given. (easy) *)
+let split' (xs : 'a list) (n : int) : 'a list * 'a list =
+  if n >= List.length xs then (xs, [])
+  else
+    let rec _split cnt acc = function
+      | [] -> acc
+      | x :: rest ->
+          if cnt = n then
+            let hd, _ = acc in
+            (x :: hd, rest)
+          else
+            let hd, tl = _split (cnt + 1) acc rest in
+            (x :: hd, tl)
+    in
+    _split 1 ([], []) xs
+
+let split (xs : 'a list) (n : int) : 'a list * 'a list =
+  let rec _split cnt acc = function
+    | [] -> (List.rev acc, [])
+    | x :: rest as l ->
+        if cnt = n then (List.rev acc, rest) else _split (cnt + 1) (x :: acc) l
+  in
+  _split 0 [] xs
 
 (* Main *)
 let () =
@@ -274,7 +297,13 @@ let () =
     replicate [ "a"; "b"; "c" ] 3
     = [ "a"; "a"; "a"; "b"; "b"; "b"; "c"; "c"; "c" ]);
 
-  print_endline "Checking solution for Problem 15";
+  print_endline "Checking solution for Problem 16";
   assert (
     drop [ "a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"; "i"; "j" ] 3
-    = [ "a"; "b"; "d"; "e"; "g"; "h"; "j" ])
+    = [ "a"; "b"; "d"; "e"; "g"; "h"; "j" ]);
+
+  print_endline "Checking solution for Problem 17";
+  assert (
+    split [ "a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"; "i"; "j" ] 3
+    = ([ "a"; "b"; "c" ], [ "d"; "e"; "f"; "g"; "h"; "i"; "j" ]));
+  assert (split [ "a"; "b"; "c"; "d" ] 5 = ([ "a"; "b"; "c"; "d" ], []))
