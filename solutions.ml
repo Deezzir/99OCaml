@@ -162,6 +162,15 @@ let replicate (xs : 'a list) (n : int) : 'a list =
   in
   List.rev (_replicate n [] xs)
 
+(* Problem 16. Drop every N'th element from a list. (medium) *)
+let drop (xs : 'a list) (n : int) : 'a list =
+  let rec _drop cnt = function
+    | [] -> []
+    | x :: rest ->
+        if cnt = n then _drop 1 rest else x :: _drop (cnt + 1) rest
+  in
+  _drop 1 xs
+
 (* Main *)
 let () =
   print_endline "Checking solution for Problem 01";
@@ -263,4 +272,9 @@ let () =
   print_endline "Checking solution for Problem 15";
   assert (
     replicate [ "a"; "b"; "c" ] 3
-    = [ "a"; "a"; "a"; "b"; "b"; "b"; "c"; "c"; "c" ])
+    = [ "a"; "a"; "a"; "b"; "b"; "b"; "c"; "c"; "c" ]);
+
+  print_endline "Checking solution for Problem 15";
+  assert (
+    drop [ "a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"; "i"; "j" ] 3
+    = [ "a"; "b"; "d"; "e"; "g"; "h"; "j" ])
